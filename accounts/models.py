@@ -13,6 +13,7 @@ class User(AbstractUser):
         validators=[RegexValidator(r"^010-?[1-9]\d{3}-?\d{4}$")],
     )
     gender = models.CharField(max_length=1, blank=True, choices=GenderChoices.choices)
+    point = models.IntegerField(default=0)
 
     def __str__(self):
         return self.email
