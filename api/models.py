@@ -1,5 +1,4 @@
 from django.db import models
-from django.forms import ImageField
 
 class Marker(models.Model):
     longitude = models.DecimalField(max_digits=20, decimal_places=10)  # 위도
