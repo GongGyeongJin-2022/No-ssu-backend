@@ -3,9 +3,11 @@ from django.utils.translation import gettext_lazy as _
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password, first_name, **extra_fields):
+    def create_user(self, email, password, first_name=None, **extra_fields):
         if not email:
-            raise ValueError(_('The Email must be set'))
+            raise ValueError('Enter an email address')
+        if not first_name:
+            raise ValueError('Enter a first name')
         email = self.normalize_email(email)
         user = self.model(email=email, first_name=first_name, **extra_fields)
         user.set_password(password)
