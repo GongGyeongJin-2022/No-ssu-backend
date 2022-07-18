@@ -8,7 +8,7 @@ class User(AbstractUser):
     phone_number = models.CharField(
         max_length=13,
         blank=True,
-        validators=[RegexValidator(r"^010-?[1-9]\d{3}-?\d{4}$")],
+        validators=[RegexValidator(r"^010-?[1-9]\d{4}-?\d{4}$")],
     )
     point = models.IntegerField(default=0)
     username = None
