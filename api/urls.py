@@ -7,6 +7,7 @@ router.register('marker',views.MarkerViewSet)
 
 urlpatterns = [
     path('',include(router.urls)),
+    path('accounts/v1/', include('accounts.urls')),
 ]
 
 
