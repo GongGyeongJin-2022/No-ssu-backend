@@ -157,8 +157,8 @@ STATIC_ROOT = os.path.join(BASE_DIR,'static')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_USE_JWT = True
-JWT_AUTH_COOKIE = 'nossu-auth'
-JWT_AUTH_REFRESH_COOKIE = 'nossu-refresh-token'
+# JWT_AUTH_COOKIE = 'nossu-auth'
+# JWT_AUTH_REFRESH_COOKIE = 'nossu-refresh-token'
 
 SITE_ID = 2
 ACCOUNT_UNIQUE_EMAIL = True
@@ -177,8 +177,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+       'rest_framework.authentication.SessionAuthentication',
+       'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ),
 }
 
