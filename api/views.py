@@ -1,4 +1,4 @@
-from .models import Marker
+from .models import Marker, Reward
 from rest_framework import viewsets
 from .serializers import MarkerSerializer,RewardSerializer
 
@@ -7,6 +7,6 @@ class MarkerViewSet(viewsets.ModelViewSet):
     serializer_class = MarkerSerializer
 
 class RewardViewSet(viewsets.ModelViewSet):
-    queryset = Marker.objects.all()
+    queryset = Reward.objects.all()
     serializer_class = RewardSerializer
 
