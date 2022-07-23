@@ -4,6 +4,7 @@ from django.db import models
 from .managers import UserManager
 from django.utils.translation import gettext_lazy as _
 
+
 class User(AbstractUser):
     phone_number = models.CharField(
         max_length=13,

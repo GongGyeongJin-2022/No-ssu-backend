@@ -7,6 +7,7 @@ class RewardSerializer(serializers.ModelSerializer):
         model = Reward
         fields = '__all__'
 
+
 class MarkerSerializer(serializers.ModelSerializer):
 
     reward = RewardSerializer(many=True)
