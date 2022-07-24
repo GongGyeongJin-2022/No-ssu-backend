@@ -11,7 +11,7 @@ class Marker(models.Model):
     tags = models.ManyToManyField('Tag', blank=True)    # 태그 (쓰레기 종류)
     reward = models.ForeignKey('Reward', on_delete=models.CASCADE)  # 현상금
     posted_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posted_user')  # 올린 사람
-    cleanup_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='cleanup_user')    # 치운 사람
+    cleanup_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='cleanup_user')    # 치운 사람
     posted_time = models.DateTimeField(auto_now_add=True)  # 올린 시간
 
     def __str__(self):
