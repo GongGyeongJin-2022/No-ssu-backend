@@ -9,11 +9,21 @@ class Marker(models.Model):
     image = models.ImageField(blank=True, null=True, upload_to='images/')   # 사진
     explanation = models.TextField()        # 설명
     tags = models.ManyToManyField('Tag')    # 태그 (쓰레기 종류)
-    sizes = models.ManyToManyField('Size')  # 쓰레기 크기 (대,중,소)
+    size_choices=(  # 쓰레기 크기 (대,중,소)
+        ('S','SMALL'),
+        ('M','MEDIUM'),
+        ('L','LARGE'),
+    )
+    sizes = models.CharField(max_length=1, choices=size_choices) 
     reward = models.ForeignKey('Reward', on_delete=models.CASCADE)  # 현상금
     posted_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posted_user')  # 올린 사람
     cleanup_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='cleanup_user')    # 치운 사람
     posted_time = models.DateTimeField(auto_now_add=True)  # 올린 시간
+    status_choices=(
+        ('C','cleanup_marker'),
+        ('W','waiting_marker'),
+    )
+    status=models.CharField(max_length=1, choices=status_choices)
 
     def __str__(self):
         return self.image
