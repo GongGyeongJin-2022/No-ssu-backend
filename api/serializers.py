@@ -10,7 +10,7 @@ class RewardSerializer(serializers.ModelSerializer):
 
 class MarkerSerializer(serializers.ModelSerializer):
 
-    reward = RewardSerializer(many=True)
+    reward = RewardSerializer()
 
     class Meta:
         model = Marker
