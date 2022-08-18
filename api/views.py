@@ -26,7 +26,7 @@ class MarkerViewSet(viewsets.ModelViewSet):
         marker.save()
         user.save()
 
-        return Response({"data": "success"}, status=status.HTTP_200_OK)
+        return Response({"status": "success"}, status=status.HTTP_200_OK)
 
 
 
