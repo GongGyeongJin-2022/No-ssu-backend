@@ -23,6 +23,9 @@ class MarkerViewSet(viewsets.ModelViewSet):
         # marker.reward만큼 user.point 증가 (올린 사람이 치운 사람한테?)
         user.point += reward.reward
 
+        marker.save()
+        user.save()
+
         return Response({"data": request.data}, status=status.HTTP_200_OK)
 
 

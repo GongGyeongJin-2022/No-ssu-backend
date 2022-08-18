@@ -19,7 +19,6 @@ class MarkerSerializer(serializers.ModelSerializer):
         reward_data = validated_data.pop('reward')
         reward = Reward.objects.create(**reward_data)
         tags = validated_data.pop('tags')
-        print(tags)
         marker = Marker.objects.create(reward=reward, **validated_data)
 
         for tag in tags:
