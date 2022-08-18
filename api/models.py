@@ -19,7 +19,7 @@ class Marker(models.Model):
     status : 상태(처리 완료, 처리 중)
     """
 
-    SIZE_CHOICES = (  # 쓰레기 크기 (대,중,소)
+    SIZE_CHOICES = (
         ('S', 'SMALL'),
         ('M', 'MEDIUM'),
         ('L', 'LARGE'),
