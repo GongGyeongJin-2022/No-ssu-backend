@@ -27,7 +27,6 @@ class MarkerViewSet(viewsets.ModelViewSet):
         return Response({"status": "success"}, status=status.HTTP_200_OK)
 
 
-
 class RewardViewSet(viewsets.ModelViewSet):
     queryset = Reward.objects.all()
     serializer_class = RewardSerializer
