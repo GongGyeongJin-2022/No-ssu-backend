@@ -18,9 +18,7 @@ class MarkerViewSet(viewsets.ModelViewSet):
         user = request.user
         
         marker.cleanup_user = user
-        # 마커 상태 waiting에서 cleaned로 바뀌고
         marker.status = 'C'
-        # marker.reward만큼 user.point 증가 (올린 사람이 치운 사람한테?)
         user.point += reward.reward
 
         marker.save()
