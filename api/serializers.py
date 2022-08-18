@@ -9,9 +9,8 @@ class RewardSerializer(serializers.ModelSerializer):
 
 
 class MarkerSerializer(serializers.ModelSerializer):
-
-    reward = RewardSerializer(many=True)
+    reward = RewardSerializer(many=False)
 
     class Meta:
         model = Marker
-        fields = '__all__'
+        fields = ('longitude', 'latitude', 'image', 'explanation', 'tags', 'size', 'reward')
