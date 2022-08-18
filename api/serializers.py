@@ -13,4 +13,15 @@ class MarkerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Marker
-        fields = ('longitude', 'latitude', 'image', 'explanation', 'tags', 'size', 'reward')
+        fields = '__all__'
+
+    def create(self, validated_data):
+        reward_data = validated_data.pop('reward')
+        reward = Reward.objects.create(**reward_data)
+        tags = validated_data.pop('tags')
+        print(tags)
+        marker = Marker.objects.create(reward=reward, **validated_data)
+
+        for tag in tags:
+            marker.tags.add(tag)
+        return marker
