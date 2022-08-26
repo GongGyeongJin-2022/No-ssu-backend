@@ -30,9 +30,3 @@ class MarkerViewSet(viewsets.ModelViewSet):
 class RewardViewSet(viewsets.ModelViewSet):
     queryset = Reward.objects.all()
     serializer_class = RewardSerializer
-
-            
-
-
-
-
