@@ -2,8 +2,8 @@ FROM python:3.9
 
 ENV PYTHONUNBUFFERED 1
 
-RUN apt-get -y update
-RUN apt-get -y install vim
+RUN apt-get update
+RUN apt-get install vim
 
 WORKDIR /nossu-backend
 
