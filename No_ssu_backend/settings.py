@@ -24,25 +24,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-secret_file = os.path.join(BASE_DIR, 'secrets.json')  # secrets.json 파일 위치를 명시
-
-with open(secret_file) as f:
-    secrets = json.loads(f.read())
 
 
-def get_secret(setting):
+def get_env_variable(var_name):
     try:
-        return secrets[setting]
+        return os.environ[var_name]
     except KeyError:
-        error_msg = "Set the {} environment variable".format(setting)
-        raise ImproperlyConfigured(error_msg)
+        error_msg = "Set the {} environment variable".format(var_name)
+    raise ImproperlyConfigured(error_msg)
 
 
-SECRET_KEY = get_secret("SECRET_KEY")
-
-for key, value in secrets.items():
-    setattr(sys.modules[__name__], key, value)
-    print(key, value)
+SECRET_KEY = get_env_variable("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -108,7 +100,19 @@ WSGI_APPLICATION = 'No_ssu_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = get_secret("DATABASES")['test']
+DATABASES = {
+    "default": {
+        "ENGINE": get_env_variable("DB_ENGINE"),
+        "NAME": get_env_variable("DB_NAME"),
+        "USER": get_env_variable("DB_USER"),
+        "PASSWORD": get_env_variable("DB_PASSWORD"),
+        "HOST": get_env_variable("DB_HOST"),
+        "PORT": get_env_variable("DB_PORT"),
+        "OPTIONS": {
+            "charset": "utf8mb4"
+        }
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
