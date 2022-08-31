@@ -28,6 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 def get_env_variable(var_name):
     try:
+        print(os.environ[var_name])
         return os.environ[var_name]
     except KeyError:
         error_msg = "Set the {} environment variable".format(var_name)
