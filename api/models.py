@@ -29,8 +29,8 @@ class Marker(models.Model):
         ('W', 'waiting_marker'),
     )
 
-    longitude = models.DecimalField(max_digits=20, decimal_places=10)
-    latitude = models.DecimalField(max_digits=20, decimal_places=10)
+    longitude = models.DecimalField(max_digits=20, decimal_places=14)  # 위도
+    latitude = models.DecimalField(max_digits=20, decimal_places=14)  # 경도
     image = models.ImageField(blank=True, null=True, upload_to='images/')
     explanation = models.TextField(default="")
     tags = models.ManyToManyField('Tag')
