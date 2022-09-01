@@ -7,11 +7,13 @@ from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import redirect
 import requests
+
+from No_ssu_backend.settings import get_env_variable
 from .models import User
 from rest_framework import status
 
-BASE_URL = getattr(settings, "BASE_URL")
-state = getattr(settings, 'STATE')
+BASE_URL = get_env_variable("BASE_URL")
+state = get_env_variable('STATE')
 GOOGLE_CALLBACK_URI = BASE_URL + 'api/accounts/v1/login/google/callback/'
 
 
@@ -23,13 +25,13 @@ class GoogleLogin(SocialLoginView):  # if you want to use Authorization Code Gra
 
 def google_login(request):
     scope = "https://www.googleapis.com/auth/userinfo.email"
-    client_id = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_ID")
+    client_id = get_env_variable("SOCIAL_AUTH_GOOGLE_CLIENT_ID")
     return redirect(f"https://accounts.google.com/o/oauth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={GOOGLE_CALLBACK_URI}&scope={scope}")
 
 
 def google_callback(request):
-    client_id = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_ID")
-    client_secret = getattr(settings, "SOCIAL_AUTH_GOOGLE_SECRET")
+    client_id = get_env_variable("SOCIAL_AUTH_GOOGLE_CLIENT_ID")
+    client_secret = get_env_variable("SOCIAL_AUTH_GOOGLE_SECRET")
     code = request.GET.get('code')
     """
     Access Token Request
