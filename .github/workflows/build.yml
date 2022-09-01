@@ -37,4 +37,5 @@ jobs:
           script: |
             sudo bash /app/clean.sh
             sudo docker volume rm app_nossu-backend
+            cd /app
             sudo docker compose up -d
