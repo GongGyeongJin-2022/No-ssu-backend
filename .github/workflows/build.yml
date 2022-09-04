@@ -2,7 +2,7 @@ name: Nossu Backend CD
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "deploy-test" ]
 
 jobs:
   build:
@@ -36,7 +36,5 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             sleep 10s
-            sudo bash /app/clean.sh
-            sudo docker volume rm app_nossu-backend
-            cd /app
-            sudo docker compose up -d
+            cd app
+            sudo bash up.sh
