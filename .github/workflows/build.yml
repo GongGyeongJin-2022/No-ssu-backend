@@ -36,5 +36,5 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             sleep 10s
-            cd app
+            cd /app
             sudo bash up.sh
