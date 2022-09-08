@@ -1,6 +1,22 @@
+from datetime import timezone
+from uuid import uuid4
+
 from django.db import models
 from accounts.models import User
 
+def date_upload_to(instance, filename):
+    # upload_to="%Y/%m/%d" 처럼 날짜로 세분화
+    ymd_path = timezone.now().strftime('%Y/%m/%d')
+    # 길이 32 인 uuid 값
+    uuid_name = uuid4().hex
+    # 확장자 추출
+    extension = '.jpeg'
+    # 결합 후 return
+    return '/'.join([
+        'images',
+        ymd_path,
+        uuid_name + extension,
+        ])
 
 class Marker(models.Model):
     """
@@ -31,7 +47,7 @@ class Marker(models.Model):
 
     longitude = models.DecimalField(max_digits=20, decimal_places=14)  # 위도
     latitude = models.DecimalField(max_digits=20, decimal_places=14)  # 경도
-    image = models.ImageField(blank=True, null=True, upload_to='images/')
+    image = models.FileField(blank=True, null=True, upload_to=date_upload_to, max_length=300)  # 사진
     explanation = models.TextField(default="")
     tags = models.ManyToManyField('Tag')
     size = models.CharField(max_length=1, choices=SIZE_CHOICES)
