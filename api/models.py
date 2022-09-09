@@ -1,8 +1,10 @@
-from datetime import timezone
+
 from uuid import uuid4
 
 from django.db import models
 from accounts.models import User
+from django.utils import timezone
+
 
 def date_upload_to(instance, filename):
     # upload_to="%Y/%m/%d" 처럼 날짜로 세분화
