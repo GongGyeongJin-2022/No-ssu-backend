@@ -98,4 +98,4 @@ class Reward(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.received_user.first_name
+        return self.received_user.__str__()
