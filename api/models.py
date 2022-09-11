@@ -77,7 +77,7 @@ class Reward(models.Model):
     """
 
     reward = models.IntegerField(default=0)  # 현상금
-    gave_user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name='gave_user')
+    gave_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True,blank=True, related_name='gave_user')
     received_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='received_user')
     date = models.DateTimeField(auto_now_add=True)
 

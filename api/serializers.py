@@ -1,6 +1,7 @@
 from dataclasses import field
 from rest_framework import serializers
 from .models import Marker, Reward
+from accounts.models import User
 
 
 class RewardSerializer(serializers.ModelSerializer):
@@ -11,9 +12,9 @@ class RewardSerializer(serializers.ModelSerializer):
 
 class MarkerSerializer(serializers.ModelSerializer):
 
-    posted_user = serializers.ReadOnlyField
-
     reward = RewardSerializer(many=False)
+
+    posted_user = serializers.ReadOnlyField
 
     class Meta:
         model = Marker
@@ -33,7 +34,7 @@ class MarkerSerializer(serializers.ModelSerializer):
 
 
 class MarkerSimpleSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Marker
         fields = ("longitude","latitude","reward")
@@ -46,6 +47,20 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Marker
         fields = ("longitude","latitude","reward")
+
+class ChargePointSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('id','point')
+
+    def update(self, instance, validated_data):
+
+        instance.point += validated_data.get('point', instance.point)
+        instance.save()
+
+        return instance
+
 
 
     
