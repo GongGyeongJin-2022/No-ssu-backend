@@ -53,18 +53,18 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Marker
         fields = ("longitude","latitude","reward")
 
-class ChargePointSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ('id','point')
-
-    def update(self, instance, validated_data):
-
-        instance.point += validated_data.get('point', instance.point)
-        instance.save()
-
-        return instance
+# class ChargePointSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = User
+#         fields = ('id','point')
+#
+#     def update(self, instance, validated_data):
+#
+#         instance.point += validated_data.get('point', instance.point)
+#         instance.save()
+#
+#         return instance
 
 
 

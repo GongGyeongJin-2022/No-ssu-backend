@@ -1,13 +1,12 @@
 from ctypes import pointer
 from .models import Marker, Reward
 from accounts.models import User
-from rest_framework import viewsets
-from .serializers import ChargePointSerializer, MarkerSerializer, MarkerSimpleSerializer, RewardSerializer, ProfileSerializer
+from rest_framework import viewsets, generics
+from .serializers import MarkerSerializer, MarkerSimpleSerializer, RewardSerializer, ProfileSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-
 
 
 class MarkerViewSet(viewsets.ModelViewSet):
@@ -53,29 +52,22 @@ class RewardViewSet(viewsets.ModelViewSet):
 
 
 class MypageViewSet(viewsets.ModelViewSet):
-
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
         user = self.request.user
         marker = Marker.objects.all()
-        return marker.filter(Q(posted_user = user) | Q(cleanup_user = user))
+        return marker.filter(Q(posted_user=user) | Q(cleanup_user=user))
 
 
+class ChargePointView(generics.GenericAPIView):
 
-class ChargePointViewSet(viewsets.ModelViewSet):
-    
-    serializer_class = ChargePointSerializer
-
-    def get_queryset(self):
+    def post(self, request, *args, **kwargs):
         current_user = self.request.user.id
-        user = User.objects.all()
-        return user.filter(id=current_user)
-
-
-
-
-
-    
-
-
+        print(1)
+        user = User.objects.get(id=current_user)
+        print(2)
+        user.point += int(self.request.data.get('point'))
+        print(3)
+        user.save()
+        return Response({'detail': 'Success'})
