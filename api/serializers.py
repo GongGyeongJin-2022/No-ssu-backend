@@ -60,11 +60,12 @@ class ChargePointSerializer(serializers.ModelSerializer):
         fields = ('id','point')
 
     def update(self, instance, validated_data):
-
         instance.point += validated_data.get('point', instance.point)
         instance.save()
-
         return instance
+
+
+
 
 
 
