@@ -1,6 +1,6 @@
 from dataclasses import field
 from rest_framework import serializers
-from .models import Marker, Reward
+from .models import Marker, Reward, Tag
 from accounts.models import User
 
 
@@ -51,7 +51,13 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Marker
-        fields = ("longitude","latitude","reward")
+        fields = ("id","longitude","latitude","reward")
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = '__all__'
 
 # class ChargePointSerializer(serializers.ModelSerializer):
 #

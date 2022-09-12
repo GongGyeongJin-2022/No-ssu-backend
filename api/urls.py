@@ -9,8 +9,7 @@ router.register('marker', views.MarkerViewSet)
 router.register('reward', views.RewardViewSet)
 router.register('simple', views.MarkerSimpleViewSet, basename='simple')
 router.register('mypage', views.MypageViewSet, basename= 'mypage')
-# router.register('charge-point', views.ChargePointViewSet, basename= 'charge-point')
-
+router.register('tag', views.TagViewSet, basename= 'tag')
 
 
 urlpatterns = [

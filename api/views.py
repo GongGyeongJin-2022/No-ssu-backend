@@ -1,8 +1,8 @@
 from ctypes import pointer
-from .models import Marker, Reward
+from .models import Marker, Reward, Tag
 from accounts.models import User
 from rest_framework import viewsets, generics
-from .serializers import MarkerSerializer, MarkerSimpleSerializer, RewardSerializer, ProfileSerializer
+from .serializers import MarkerSerializer, MarkerSimpleSerializer, RewardSerializer, ProfileSerializer, TagSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Q
@@ -58,6 +58,11 @@ class MypageViewSet(viewsets.ModelViewSet):
         user = self.request.user
         marker = Marker.objects.all()
         return marker.filter(Q(posted_user=user) | Q(cleanup_user=user))
+
+
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
 
 
 class ChargePointView(generics.GenericAPIView):
