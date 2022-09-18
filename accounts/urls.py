@@ -8,4 +8,5 @@ urlpatterns = [
     path('login/google/finish/', views.GoogleLogin.as_view(), name='google_login_finish'),
     path('login/google/', views.google_login, name='google_login'),
     path('login/google/callback/', views.google_callback, name='google_callback'),
+    path('verify-fcm/', views.VerifyFCMView.as_view(), name='verify_fcm'),
 ]

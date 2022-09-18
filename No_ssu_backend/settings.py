@@ -11,9 +11,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # TODO: 배포할 땐 항상 False로 변경
 DEBUG = True
 
-secret_file = os.path.join(BASE_DIR, 'secrets.json')
-with open(secret_file) as f:
-    secrets = json.loads(f.read())
+
+if DEBUG:
+    secret_file = os.path.join(BASE_DIR, 'secrets.json')
+    with open(secret_file) as f:
+        secrets = json.loads(f.read())
 
 
 def get_env_variable(var_name):
@@ -62,7 +64,6 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
