@@ -3,15 +3,19 @@ from allauth.socialaccount.models import SocialAccount
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
-from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import redirect
 import requests
-from .models import User
-from rest_framework import status
 
-BASE_URL = getattr(settings, "BASE_URL")
-state = getattr(settings, 'STATE')
+from No_ssu_backend.settings import get_env_variable
+from .models import User
+
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+BASE_URL = get_env_variable("BASE_URL")
+state = get_env_variable('STATE')
 GOOGLE_CALLBACK_URI = BASE_URL + 'api/accounts/v1/login/google/callback/'
 
 
@@ -23,13 +27,14 @@ class GoogleLogin(SocialLoginView):  # if you want to use Authorization Code Gra
 
 def google_login(request):
     scope = "https://www.googleapis.com/auth/userinfo.email"
-    client_id = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_ID")
-    return redirect(f"https://accounts.google.com/o/oauth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={GOOGLE_CALLBACK_URI}&scope={scope}")
+    client_id = get_env_variable("SOCIAL_AUTH_GOOGLE_CLIENT_ID")
+    return redirect(
+        f"https://accounts.google.com/o/oauth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={GOOGLE_CALLBACK_URI}&scope={scope}")
 
 
 def google_callback(request):
-    client_id = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_ID")
-    client_secret = getattr(settings, "SOCIAL_AUTH_GOOGLE_SECRET")
+    client_id = get_env_variable("SOCIAL_AUTH_GOOGLE_CLIENT_ID")
+    client_secret = get_env_variable("SOCIAL_AUTH_GOOGLE_SECRET")
     code = request.GET.get('code')
     """
     Access Token Request
@@ -85,3 +90,21 @@ def google_callback(request):
         accept_json.pop('user', None)
         accept_json.pop('user', None)
         return JsonResponse(accept_json)
+
+
+class VerifyFCMView(APIView):
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        fcm_token = request.data.get('fcm_token')
+
+        if fcm_token is None:
+            return Response({'message': 'no token'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if (user.fcm_token is not None) and (user.fcm_token == fcm_token):
+            return Response({'message': 'ok'}, status=status.HTTP_200_OK)
+
+        else:
+            user.fcm_token = fcm_token
+            user.save()
+
+        return Response({'message': 'ok'}, status=status.HTTP_200_OK)
