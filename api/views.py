@@ -1,4 +1,3 @@
-from ctypes import pointer
 from .models import Marker, Reward, Tag
 from accounts.models import User
 from rest_framework import viewsets, generics
@@ -6,7 +5,10 @@ from .serializers import MarkerSerializer, MarkerSimpleSerializer, RewardSeriali
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
+
+from datetime import datetime
+
+from .utils import send_push_message
 
 
 class MarkerViewSet(viewsets.ModelViewSet):
@@ -16,12 +18,11 @@ class MarkerViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(posted_user=self.request.user)
 
-    def destroy(self, request, *args, **kwargs):
+    def perform_destroy(self, request, pk=None):
         marker_id = self.kwargs['pk']
-        print(self.kwargs)
         marker = Marker.objects.get(id=marker_id)
         reward = marker.reward
-        user = request.user
+        user = self.request.user
 
         marker.cleanup_user = user
         marker.status = 'C'
@@ -29,6 +30,10 @@ class MarkerViewSet(viewsets.ModelViewSet):
 
         marker.save()
         user.save()
+
+        # 마커 올린 시간
+        posted_time = marker.posted_time
+        send_push_message(marker.posted_user, {'title': '마커 처리 알림', 'body': f'{posted_time.hour}시 {posted_time.minute}분에 올린 마커가 처리되었습니다.'})
 
         return Response({"status": "success"}, status=status.HTTP_200_OK)
 
