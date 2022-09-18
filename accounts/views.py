@@ -10,9 +10,11 @@ import requests
 from No_ssu_backend.settings import get_env_variable
 from .models import User
 
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from .serializers import UserSerializer
 
 BASE_URL = get_env_variable("BASE_URL")
 state = get_env_variable('STATE')
@@ -90,6 +92,13 @@ def google_callback(request):
         accept_json.pop('user', None)
         accept_json.pop('user', None)
         return JsonResponse(accept_json)
+
+
+class UserView(APIView):
+    def get(self, request):
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
 
 
 class VerifyFCMView(APIView):
