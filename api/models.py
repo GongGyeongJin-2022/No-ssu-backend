@@ -50,7 +50,6 @@ class Marker(models.Model):
 
     longitude = models.DecimalField(max_digits=20, decimal_places=14)  # 위도
     latitude = models.DecimalField(max_digits=20, decimal_places=14)  # 경도
-    image = models.FileField(blank=True, null=True, upload_to=date_upload_to, max_length=300)  # 사진
     explanation = models.TextField(default="")
     tags = models.ManyToManyField('Tag')
     size = models.CharField(max_length=1, choices=SIZE_CHOICES)
@@ -61,7 +60,12 @@ class Marker(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='W')
 
     def __str__(self):
-        return self.image
+        return self.explanation
+
+
+class MarkerImage(models.Model):
+    marker = models.ForeignKey(Marker, on_delete=models.CASCADE)
+    image = models.FileField(blank=True, null=True, upload_to=date_upload_to, max_length=300)  # 사진
 
 
 class Tag(models.Model):
