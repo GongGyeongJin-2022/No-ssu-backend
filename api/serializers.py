@@ -12,15 +12,16 @@ class RewardSerializer(serializers.ModelSerializer):
 class MarkerImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = MarkerImage
-        fields = ['image','marker']
+        fields = ['image', 'marker']
 
 class MarkerSerializer(serializers.ModelSerializer):
 
     posted_user = serializers.ReadOnlyField
 
     reward = RewardSerializer(many=False, read_only=True)
-    images = MarkerImageSerializer(many=True)
+    images = MarkerImageSerializer(source='markerimage_set', many=True, read_only=True)
     reward_reward = serializers.IntegerField(write_only=True)
+    # images_image = serializers.FileField(write_only=True)
 
     class Meta:
         model = Marker
@@ -33,14 +34,16 @@ class MarkerSerializer(serializers.ModelSerializer):
         reward_data = validated_data.pop('reward_reward', None)
         reward = Reward.objects.create(reward=reward_data, gave_user=validated_data["posted_user"])
         tags = validated_data.pop('tags')
+        images = self.context.get('view').request.FILES
         marker = Marker.objects.create(reward=reward, **validated_data)
-        images = validated_data.pop('images')
-        for image in images:
-            MarkerImage.objects.create(marker=marker, **image)
+
+        for image in images.values():
+            MarkerImage.objects.create(marker=marker, image=image)
 
         for tag in tags:
             marker.tags.add(tag)
         return marker
+
   
     
 
