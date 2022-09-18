@@ -1,4 +1,8 @@
 from ctypes import pointer
+
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import AllowAny
+
 from .models import Marker, Reward, Tag
 from accounts.models import User
 from rest_framework import viewsets, generics
@@ -60,14 +64,16 @@ class TagViewSet(viewsets.ModelViewSet):
     serializer_class = TagSerializer
 
 
+@permission_classes([AllowAny])
 class ChargePointView(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
-        current_user = self.request.user.id
-        print(1)
-        user = User.objects.get(id=current_user)
-        print(2)
-        user.point += int(self.request.data.get('point'))
-        print(3)
-        user.save()
-        return Response({'detail': 'Success'})
+        print(request.data)
+        # current_user = self.request.user.id
+        # print(1)
+        # user = User.objects.get(id=current_user)
+        # print(2)
+        # user.point += int(self.request.data.get('point'))
+        # print(3)
+        # user.save()
+        return Response({"success": True}, status=status.HTTP_200_OK)
