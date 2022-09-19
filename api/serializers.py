@@ -1,5 +1,8 @@
 from dataclasses import field
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
+
+from No_ssu_backend import settings
 from .models import Marker, Reward, Tag, MarkerImage
 from accounts.models import User
 
@@ -19,7 +22,7 @@ class MarkerSerializer(serializers.ModelSerializer):
     posted_user = serializers.ReadOnlyField
 
     reward = RewardSerializer(many=False, read_only=True)
-    images = MarkerImageSerializer(source='markerimage_set', many=True, read_only=True)
+    images = SerializerMethodField(read_only=True)
     reward_reward = serializers.IntegerField(write_only=True)
     # images_image = serializers.FileField(write_only=True)
 
@@ -44,8 +47,8 @@ class MarkerSerializer(serializers.ModelSerializer):
             marker.tags.add(tag)
         return marker
 
-  
-    
+    def get_images(self, instance):
+        return [settings.MEDIA_URL+str(item.image) for item in instance.images.all()]
 
 
 class MarkerSimpleSerializer(serializers.ModelSerializer):

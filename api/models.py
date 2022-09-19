@@ -64,7 +64,7 @@ class Marker(models.Model):
 
 
 class MarkerImage(models.Model):
-    marker = models.ForeignKey(Marker, on_delete=models.CASCADE)
+    marker = models.ForeignKey(Marker, related_name='images', on_delete=models.CASCADE)
     image = models.FileField(blank=True, null=True, upload_to=date_upload_to, max_length=300)  # 사진
 
 
