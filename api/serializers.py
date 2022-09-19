@@ -28,7 +28,7 @@ class MarkerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Marker
-        fields = ('id','reward','longitude','latitude','explanation','size','posted_time','status','posted_user','cleanup_user','tags','reward_reward','images')
+        fields = ('id','reward','longitude','latitude','explanation','size','posted_time','status','posted_user','tags','reward_reward','images')
         extra_kwargs = {
             'reward_reward': {'write_only': True}
         }
