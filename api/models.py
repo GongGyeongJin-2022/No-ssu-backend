@@ -58,7 +58,7 @@ class Marker(models.Model):
     posted_user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name='posted_user')
     cleanup_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='cleanup_user')
     posted_time = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='W')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='U')
 
     def __str__(self):
         return self.image
