@@ -15,6 +15,7 @@ router.register('tag', views.TagViewSet, basename= 'tag')
 urlpatterns = [
     path('', include(router.urls)),
     path('accounts/v1/', include('accounts.urls')),
-    path('charge-point/', views.ChargePointView.as_view())
+    path('charge-point/', views.ChargePointAPI.as_view()),
+    path('verify-payments/', views.VerifyPaymentsAPI.as_view()),
 ]
 

@@ -65,16 +65,16 @@ class TagViewSet(viewsets.ModelViewSet):
     serializer_class = TagSerializer
 
 
-@permission_classes([AllowAny])
-class ChargePointView(generics.GenericAPIView):
+class ChargePointAPI(generics.GenericAPIView):
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        user.point += 1000
+        user.save()
+        return Response(status=status.HTTP_200_OK)
 
+
+@permission_classes([AllowAny])
+class VerifyPaymentsAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         print(request.data)
-        # current_user = self.request.user.id
-        # print(1)
-        # user = User.objects.get(id=current_user)
-        # print(2)
-        # user.point += int(self.request.data.get('point'))
-        # print(3)
-        # user.save()
-        return Response({"success": True}, status=status.HTTP_200_OK)
+        return Response({"success": "true"}, status=status.HTTP_200_OK)
