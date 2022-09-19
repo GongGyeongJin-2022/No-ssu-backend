@@ -44,7 +44,7 @@ class RewardViewSet(viewsets.ModelViewSet):
     serializer_class = RewardSerializer
 
     def perform_create(self, serializer):
-        serializer.save(helper=self.request.user)
+        serializer.save(status="W", helper=self.request.user)
 
 
 class MypageViewSet(viewsets.ModelViewSet):

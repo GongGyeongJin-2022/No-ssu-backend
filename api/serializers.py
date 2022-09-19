@@ -1,6 +1,6 @@
 from dataclasses import field
 from rest_framework import serializers
-from rest_framework.fields import SerializerMethodField
+from rest_framework.fields import SerializerMethodField, CharField
 
 from No_ssu_backend import settings
 from rest_framework.relations import PrimaryKeyRelatedField
@@ -78,6 +78,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 class ClearSerializer(serializers.ModelSerializer):
     cleanup_user = PrimaryKeyRelatedField(read_only=True)
+    status = CharField(read_only=True)
     images = SerializerMethodField(read_only=True)
 
     class Meta:
