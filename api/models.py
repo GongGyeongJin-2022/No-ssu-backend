@@ -1,4 +1,3 @@
-
 from uuid import uuid4
 
 from django.db import models
@@ -18,7 +17,8 @@ def date_upload_to(instance, filename):
         'images',
         ymd_path,
         uuid_name + extension,
-        ])
+    ])
+
 
 class Marker(models.Model):
     """
@@ -55,7 +55,6 @@ class Marker(models.Model):
     size = models.CharField(max_length=1, choices=SIZE_CHOICES)
     reward = models.ForeignKey('Reward', on_delete=models.CASCADE, null=False)
     posted_user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name='posted_user')
-    cleanup_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='cleanup_user')
     posted_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='W')
 
@@ -68,12 +67,30 @@ class MarkerImage(models.Model):
     image = models.FileField(blank=True, null=True, upload_to=date_upload_to, max_length=300)  # 사진
 
 
+class Clear(models.Model):
+    STATUS_CHOICES = (
+        ('W', 'Waiting'),
+        ('D', 'Deny'),
+        ('C', 'Confirm')
+    )
+
+    marker = models.ForeignKey(Marker, related_name='marker', on_delete=models.CASCADE)
+    cleanup_user = models.ForeignKey(User,  related_name='cleanup_user', on_delete=models.CASCADE)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='W')
+    explanation = models.TextField(default="")
+
+
+class ClearImage(models.Model):
+    clear = models.ForeignKey(Clear, related_name='images', on_delete=models.CASCADE)
+    image = models.FileField(blank=True, null=True, upload_to=date_upload_to, max_length=300)  # 사진
+
+
 class Tag(models.Model):
     """
     태그 테이블
     name : 태그 명
     """
-    name = models.CharField(max_length=20) 
+    name = models.CharField(max_length=20)
 
     def __str__(self):
         return self.name
@@ -84,10 +101,10 @@ class Size(models.Model):
     사이즈 테이블
     name : 사이즈 명
     """
-    size = models.CharField(max_length=10) 
+    size = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.size       
+        return self.size
 
 
 class Reward(models.Model):
@@ -100,8 +117,9 @@ class Reward(models.Model):
     """
 
     reward = models.IntegerField(default=0)  # 현상금
-    gave_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True,blank=True, related_name='gave_user')
-    received_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='received_user')
+    gave_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='gave_user')
+    received_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True,
+                                      related_name='received_user')
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
