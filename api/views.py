@@ -1,4 +1,5 @@
 from ctypes import pointer
+from .models import Marker, Reward, Tag, Clear
 
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import AllowAny
@@ -7,7 +8,7 @@ from .models import Marker, Reward, Tag
 from accounts.models import User
 from rest_framework import viewsets, generics
 from .serializers import MarkerSerializer, MarkerSimpleSerializer, RewardSerializer, ProfileSerializer, TagSerializer, \
-    MarkerImageSerializer
+    MarkerImageSerializer, ClearSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Q
@@ -19,7 +20,7 @@ class MarkerViewSet(viewsets.ModelViewSet):
     serializer_class = MarkerSerializer
 
     def perform_create(self, serializer):
-        serializer.save(posted_user=self.request.user)
+        serializer.save(status="U", posted_user=self.request.user)
 
     def destroy(self, request, *args, **kwargs):
         marker_id = self.kwargs['pk']
@@ -48,7 +49,7 @@ class RewardViewSet(viewsets.ModelViewSet):
     serializer_class = RewardSerializer
 
     def perform_create(self, serializer):
-        serializer.save(helper=self.request.user)
+        serializer.save(status="W", helper=self.request.user)
 
 
 class MypageViewSet(viewsets.ModelViewSet):
@@ -63,6 +64,14 @@ class MypageViewSet(viewsets.ModelViewSet):
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+
+class ClearViewSet(viewsets.ModelViewSet):
+    queryset = Clear.objects.all()
+    serializer_class = ClearSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(cleanup_user=self.request.user)
 
 
 class ChargePointAPI(generics.GenericAPIView):
