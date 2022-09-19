@@ -15,7 +15,7 @@ class MarkerViewSet(viewsets.ModelViewSet):
     serializer_class = MarkerSerializer
 
     def perform_create(self, serializer):
-        serializer.save(posted_user=self.request.user)
+        serializer.save(status="U", posted_user=self.request.user)
 
     def destroy(self, request, *args, **kwargs):
         marker_id = self.kwargs['pk']

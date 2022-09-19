@@ -88,6 +88,9 @@ class ClearSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         images = self.context.get('view').request.FILES
         clear = Clear.objects.create(**validated_data)
+        marker = Marker.objects.get(id=validated_data['marker'].id)
+        marker.status="W"
+        marker.save()
 
         for image in images.values():
             ClearImage.objects.create(clear=clear, image=image)
