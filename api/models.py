@@ -33,7 +33,7 @@ class Marker(models.Model):
     posted_user : 게시자
     cleanup_user : 처리자
     posted_time : 게시 시간
-    status : 상태(처리 완료, 처리 중)
+    status : 상태(처리 부탁, 처리 확인 중, 처리 완료)
     """
 
     SIZE_CHOICES = (
@@ -43,13 +43,13 @@ class Marker(models.Model):
     )
 
     STATUS_CHOICES = (
-        ('C', 'cleanup_marker'),
+        ('U', 'uncleaned_marker'),
         ('W', 'waiting_marker'),
+        ('C', 'cleanup_marker'),
     )
 
     longitude = models.DecimalField(max_digits=20, decimal_places=14)  # 위도
     latitude = models.DecimalField(max_digits=20, decimal_places=14)  # 경도
-    image = models.FileField(blank=True, null=True, upload_to=date_upload_to, max_length=300)  # 사진
     explanation = models.TextField(default="")
     tags = models.ManyToManyField('Tag')
     size = models.CharField(max_length=1, choices=SIZE_CHOICES)
@@ -60,7 +60,12 @@ class Marker(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='W')
 
     def __str__(self):
-        return self.image
+        return self.explanation
+
+
+class MarkerImage(models.Model):
+    marker = models.ForeignKey(Marker, related_name='images', on_delete=models.CASCADE)
+    image = models.FileField(blank=True, null=True, upload_to=date_upload_to, max_length=300)  # 사진
 
 
 class Tag(models.Model):
