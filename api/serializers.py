@@ -1,6 +1,9 @@
 from dataclasses import field
 from rest_framework import serializers
-from .models import Marker, Reward, Tag
+from rest_framework.fields import SerializerMethodField
+
+from No_ssu_backend import settings
+from .models import Marker, Reward, Tag, MarkerImage
 from accounts.models import User
 
 
@@ -9,33 +12,43 @@ class RewardSerializer(serializers.ModelSerializer):
         model = Reward
         fields = '__all__'
 
+class MarkerImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MarkerImage
+        fields = ['image', 'marker']
 
 class MarkerSerializer(serializers.ModelSerializer):
 
     posted_user = serializers.ReadOnlyField
 
     reward = RewardSerializer(many=False, read_only=True)
+    images = SerializerMethodField(read_only=True)
     reward_reward = serializers.IntegerField(write_only=True)
+    # images_image = serializers.FileField(write_only=True)
 
     class Meta:
         model = Marker
-        fields = ('id','reward','longitude','latitude','image','explanation','size','posted_time','status','posted_user','cleanup_user','tags','reward_reward')
+        fields = ('id','reward','longitude','latitude','explanation','size','posted_time','status','posted_user','cleanup_user','tags','reward_reward','images')
         extra_kwargs = {
-            'reward_reward': {'write_only': True},
+            'reward_reward': {'write_only': True}
         }
 
     def create(self, validated_data):
         reward_data = validated_data.pop('reward_reward', None)
-        print(reward_data)
         reward = Reward.objects.create(reward=reward_data, gave_user=validated_data["posted_user"])
         tags = validated_data.pop('tags')
+        images = self.context.get('view').request.FILES
         marker = Marker.objects.create(reward=reward, **validated_data)
+
+        for image in images.values():
+            MarkerImage.objects.create(marker=marker, image=image)
 
         for tag in tags:
             marker.tags.add(tag)
         return marker
-  
-    
+
+    def get_images(self, instance):
+        return [settings.MEDIA_URL+str(item.image) for item in instance.images.all()]
 
 
 class MarkerSimpleSerializer(serializers.ModelSerializer):

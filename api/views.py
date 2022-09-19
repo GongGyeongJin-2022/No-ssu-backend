@@ -6,7 +6,8 @@ from rest_framework.permissions import AllowAny
 from .models import Marker, Reward, Tag
 from accounts.models import User
 from rest_framework import viewsets, generics
-from .serializers import MarkerSerializer, MarkerSimpleSerializer, RewardSerializer, ProfileSerializer, TagSerializer
+from .serializers import MarkerSerializer, MarkerSimpleSerializer, RewardSerializer, ProfileSerializer, TagSerializer, \
+    MarkerImageSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Q
