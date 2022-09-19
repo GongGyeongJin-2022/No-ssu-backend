@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from dj_rest_auth.registration.serializers import RegisterSerializer
-from .models import User
+
+from accounts.models import User
+
 
 class CustomRegisterSerializer(RegisterSerializer):
     first_name = serializers.CharField()
@@ -13,7 +15,6 @@ class CustomRegisterSerializer(RegisterSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'point')
+        fields = ('id', 'username', 'first_name', 'last_name', 'point')
