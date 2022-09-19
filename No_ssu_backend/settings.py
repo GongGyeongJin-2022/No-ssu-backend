@@ -5,7 +5,9 @@ from pathlib import Path
 from datetime import timedelta
 
 from django.core.exceptions import ImproperlyConfigured
+import pymysql
 
+pymysql.install_as_MySQLdb()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # TODO: 배포할 땐 항상 False로 변경
