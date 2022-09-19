@@ -8,8 +8,9 @@ router = DefaultRouter()
 router.register('marker', views.MarkerViewSet)
 router.register('reward', views.RewardViewSet)
 router.register('simple', views.MarkerSimpleViewSet, basename='simple')
-router.register('mypage', views.MypageViewSet, basename= 'mypage')
-router.register('tag', views.TagViewSet, basename= 'tag')
+router.register('mypage', views.MypageViewSet, basename='mypage')
+router.register('tag', views.TagViewSet, basename='tag')
+router.register('clear', views.ClearViewSet, basename='clear')
 
 
 urlpatterns = [
