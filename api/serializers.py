@@ -3,8 +3,11 @@ from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 
 from No_ssu_backend import settings
-from .models import Marker, Reward, Tag, MarkerImage
+from rest_framework.relations import PrimaryKeyRelatedField
+
+from .models import Marker, Reward, Tag, MarkerImage, Clear, ClearImage
 from accounts.models import User
+from accounts.serializers import UserSerializer
 
 
 class RewardSerializer(serializers.ModelSerializer):
@@ -71,6 +74,27 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = '__all__'
+
+
+class ClearSerializer(serializers.ModelSerializer):
+    cleanup_user = PrimaryKeyRelatedField(read_only=True)
+    images = SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Clear
+        fields = ('marker', 'cleanup_user', 'status', 'explanation', 'images')
+
+    def create(self, validated_data):
+        images = self.context.get('view').request.FILES
+        clear = Clear.objects.create(**validated_data)
+
+        for image in images.values():
+            ClearImage.objects.create(clear=clear, image=image)
+
+        return clear
+
+    def get_images(self, instance):
+        return [settings.MEDIA_URL+str(item.image) for item in instance.images.all()]
 
 # class ChargePointSerializer(serializers.ModelSerializer):
 #
