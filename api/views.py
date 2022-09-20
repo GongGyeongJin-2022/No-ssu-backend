@@ -44,7 +44,7 @@ class MarkerViewSet(viewsets.ModelViewSet):
 
 
 class MarkerSimpleViewSet(viewsets.ModelViewSet):
-    queryset = Marker.objects.all()
+    queryset = Marker.objects.filter(Q(status="U") | Q(status="W"))
     serializer_class = MarkerSimpleSerializer
 
 
@@ -101,6 +101,26 @@ class MarkerWaitingViewSet(viewsets.ViewSet):
         serializer = ClearListSerializer(clears, many=True)
         print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request):
+        clear_id = request.data['clear_id']
+        clear = Clear.objects.get(id=clear_id)
+
+        clear_status = request.data['status']
+        if clear_status == 'approve':
+            clear.status = "C"
+            clear.marker.status = "C"
+            clear.marker.cleanup_user = clear.cleanup_user
+            clear.marker.save()
+            clear.cleanup_user.point += clear.marker.reward.reward
+            clear.cleanup_user.save()
+            clear.save()
+
+        elif clear_status == 'reject':
+            clear.status = "D"
+            clear.save()
+
+        return Response(status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None):
         clear = Clear.objects.get(id=pk)
