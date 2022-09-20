@@ -25,7 +25,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: pressodh/dev-nossu-wsgi:latest
+          tags: pressodh/nossu-wsgi:latest
 
       - name: Deploy in aws
         uses: appleboy/ssh-action@master
