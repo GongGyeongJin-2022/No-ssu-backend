@@ -1,6 +1,6 @@
 from dataclasses import field
 from rest_framework import serializers
-from rest_framework.fields import SerializerMethodField, CharField, DecimalField
+from rest_framework.fields import SerializerMethodField, CharField, DecimalField, IntegerField
 
 from No_ssu_backend import settings
 from rest_framework.relations import PrimaryKeyRelatedField
@@ -62,7 +62,7 @@ class MarkerSerializer(serializers.ModelSerializer):
 class MarkerSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Marker
-        fields = ("id", "longitude", "latitude", "reward")
+        fields = ("id", "longitude", "latitude", "reward", "status")
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -103,10 +103,11 @@ class LogSerializer(serializers.ModelSerializer):
     longitude = DecimalField(source='marker.longitude', max_digits=20, decimal_places=14, read_only=True)
     posted_user = CharField(source='marker.posted_user.first_name', read_only=True)
     cleanup_user = CharField(source='cleanup_user.first_name', read_only=True)
+    reward = IntegerField(source='marker.reward.reward', read_only=True)
 
     class Meta:
         model = Clear
-        fields = ("latitude", "longitude", "posted_user", "cleanup_user", "created_at")
+        fields = ("latitude", "longitude", "posted_user", "cleanup_user", "created_at", "reward")
 
 
 class ClearListSerializer(serializers.ModelSerializer):
