@@ -9,7 +9,7 @@ from django.core.exceptions import ImproperlyConfigured
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # TODO: 배포할 땐 항상 False로 변경
-DEBUG = True
+DEBUG = False
 
 
 if DEBUG:
