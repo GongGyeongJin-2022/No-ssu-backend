@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny
 from accounts.models import User
 from rest_framework import viewsets, generics
 from .serializers import MarkerSerializer, MarkerSimpleSerializer, RewardSerializer, ProfileSerializer, TagSerializer, \
-    MarkerImageSerializer, ClearSerializer
+    MarkerImageSerializer, ClearSerializer, ClearListSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Q
@@ -91,3 +91,18 @@ class VerifyPaymentsAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         print(request.data)
         return Response({"success": "true"}, status=status.HTTP_200_OK)
+
+
+class MarkerWaitingViewSet(viewsets.ViewSet):
+    def list(self, request, *args, **kwargs):
+        clears = Clear.objects.filter(
+            Q(marker__posted_user=request.user) & Q(status="W")
+        )
+        serializer = ClearListSerializer(clears, many=True)
+        print(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk=None):
+        clear = Clear.objects.get(id=pk)
+        serializer = ClearSerializer(clear)
+        return Response(serializer.data, status=status.HTTP_200_OK)
