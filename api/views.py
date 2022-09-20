@@ -5,8 +5,8 @@ from rest_framework.permissions import AllowAny
 
 from accounts.models import User
 from rest_framework import viewsets, generics
-from .serializers import MarkerSerializer, MarkerSimpleSerializer, RewardSerializer, ProfileSerializer, TagSerializer, \
-    MarkerImageSerializer, ClearSerializer, ClearListSerializer
+from .serializers import MarkerSerializer, MarkerSimpleSerializer, RewardSerializer, TagSerializer, \
+    MarkerImageSerializer, ClearSerializer, ClearListSerializer, LogSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Q
@@ -38,7 +38,8 @@ class MarkerViewSet(viewsets.ModelViewSet):
 
         # 마커 올린 시간
         posted_time = marker.posted_time
-        send_push_message(marker.posted_user, {'title': '마커 처리 알림', 'body': f'{posted_time.hour}시 {posted_time.minute}분에 올린 마커가 처리되었습니다.'})
+        send_push_message(marker.posted_user,
+                          {'title': '마커 처리 알림', 'body': f'{posted_time.hour}시 {posted_time.minute}분에 올린 마커가 처리되었습니다.'})
 
         return Response({"status": "success"}, status=status.HTTP_200_OK)
 
@@ -57,12 +58,14 @@ class RewardViewSet(viewsets.ModelViewSet):
 
 
 class MypageViewSet(viewsets.ModelViewSet):
-    serializer_class = ProfileSerializer
+    serializer_class = LogSerializer
 
     def get_queryset(self):
         user = self.request.user
-        marker = Marker.objects.all()
-        return marker.filter(Q(posted_user=user) | Q(cleanup_user=user))
+        user = User.objects.get(id=9)
+        clears = Clear.objects.filter(Q(cleanup_user=user) & Q(status="C"))
+
+        return clears
 
 
 class TagViewSet(viewsets.ModelViewSet):
