@@ -65,14 +65,6 @@ class MarkerSimpleSerializer(serializers.ModelSerializer):
         fields = ("id", "longitude", "latitude", "reward")
 
 
-class ProfileSerializer(serializers.ModelSerializer):
-    reward = RewardSerializer(many=False)
-
-    class Meta:
-        model = Marker
-        fields = ("longitude", "latitude", "reward")
-
-
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
@@ -104,6 +96,15 @@ class ClearSerializer(serializers.ModelSerializer):
 
     def get_images(self, instance):
         return [settings.MEDIA_URL + str(item.image) for item in instance.images.all()]
+
+
+class LogSerializer(serializers.ModelSerializer):
+    marker = MarkerSimpleSerializer(many=False, read_only=True)
+    cleanup_user = PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = Clear
+        fields = ("cleanup_user", "created_at", "marker")
 
 
 class ClearListSerializer(serializers.ModelSerializer):

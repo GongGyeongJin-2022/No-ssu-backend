@@ -78,6 +78,7 @@ class Clear(models.Model):
     cleanup_user = models.ForeignKey(User,  related_name='cleanup_user', on_delete=models.CASCADE)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='W')
     explanation = models.TextField(default="")
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class ClearImage(models.Model):
