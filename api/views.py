@@ -75,7 +75,7 @@ class ClearViewSet(viewsets.ModelViewSet):
     serializer_class = ClearSerializer
 
     def perform_create(self, serializer):
-        serializer.save(cleanup_user=self.request.user)
+        serializer.save(cleanup_user=self.request.user, marker_id=self.request.data['marker'])
 
 
 class ChargePointAPI(generics.GenericAPIView):
