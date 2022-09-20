@@ -62,7 +62,6 @@ class MypageViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        user = User.objects.get(id=9)
         clears = Clear.objects.filter(Q(cleanup_user=user) & Q(status="C"))
 
         return clears
