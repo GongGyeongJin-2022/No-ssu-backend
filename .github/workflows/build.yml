@@ -37,4 +37,4 @@ jobs:
           script: |
             sleep 10s
             cd /app
-            sudo bash dev-up.sh
+            sudo bash up.sh
