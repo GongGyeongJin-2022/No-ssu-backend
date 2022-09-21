@@ -61,6 +61,8 @@ class MarkerSerializer(serializers.ModelSerializer):
 
 
 class MarkerSimpleSerializer(serializers.ModelSerializer):
+    reward = IntegerField(source='reward.reward', read_only=True)
+
     class Meta:
         model = Marker
         fields = ("id", "longitude", "latitude", "reward", "status")
