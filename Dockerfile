@@ -4,6 +4,7 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update
 RUN apt-get -y install vim
+RUN apt-get install ffmpeg libsm6 libxext6  -y
 
 WORKDIR /nossu-backend
 

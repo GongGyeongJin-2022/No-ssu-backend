@@ -30,7 +30,7 @@ def get_env_variable(var_name):
     raise ImproperlyConfigured(error_msg)
 
 
-DETECTION_MODEL = torch.hub.load('ultralytics/yolov5', 'custom', path='../best.pt')
+DETECTION_MODEL = torch.hub.load('ultralytics/yolov5', 'custom', path='best.pt')
 SECRET_KEY = get_env_variable("SECRET_KEY")
 
 
