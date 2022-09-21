@@ -104,7 +104,7 @@ class MarkerWaitingViewSet(viewsets.ViewSet):
             clear.marker.status = "C"
             clear.marker.cleanup_user = clear.cleanup_user
             clear.marker.save()
-            clear.cleanup_user.point += clear.marker.reward.reward
+            clear.cleanup_user.point += int(clear.marker.reward.reward * 0.9)
             clear.cleanup_user.save()
             clear.save()
 
