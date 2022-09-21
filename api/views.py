@@ -20,7 +20,9 @@ class MarkerViewSet(viewsets.ModelViewSet):
     queryset = Marker.objects.all()
     serializer_class = MarkerSerializer
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         # object detection
         for image in self.request.FILES.values():
             image = Image.open(image)
@@ -35,7 +37,8 @@ class MarkerViewSet(viewsets.ModelViewSet):
             for item in resList:
                 if item[1] >= 0.60:
                     serializer.save(status="U", posted_user=self.request.user)
-                    return Response({"response": True}, status=status.HTTP_200_OK)
+                    headers = self.get_success_headers(serializer.data)
+                    return Response({"response": True}, status=status.HTTP_200_OK, headers=headers)
 
         return Response({"response": False}, status=status.HTTP_200_OK)
 
@@ -87,8 +90,27 @@ class ClearViewSet(viewsets.ModelViewSet):
     queryset = Clear.objects.all()
     serializer_class = ClearSerializer
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # object detection
+        for image in self.request.FILES.values():
+            image = Image.open(image)
+            results = model(image)
+
+            print(results.pandas().xyxy)
+
+            resList = [[] for _ in range(len(results.pandas().xyxy[0]['name']))]
+            for i in range(len(results.pandas().xyxy[0]['name'])):
+                resList[i].append(results.pandas().xyxy[0]['name'][i])
+                resList[i].append(results.pandas().xyxy[0]['confidence'][i])
+            for item in resList:
+                if item[1] >= 0.60:  # 하나라도 신뢰도가 0.6 이상이 나오는 경우 쓰레기 처리 인정 x
+                    return Response({"response": False}, status=status.HTTP_200_OK)
+
         serializer.save(cleanup_user=self.request.user, marker_id=self.request.data['marker'])
+        headers = self.get_success_headers(serializer.data)
+        return Response({"response": True}, status=status.HTTP_200_OK, headers=headers)
 
 
 class ChargePointAPI(generics.GenericAPIView):
