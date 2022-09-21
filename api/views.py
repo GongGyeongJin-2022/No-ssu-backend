@@ -1,3 +1,4 @@
+from No_ssu_backend import settings
 from .models import Marker, Reward, Tag, Clear
 
 from rest_framework.decorators import permission_classes
@@ -10,13 +11,33 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Q
 
+from PIL import Image
+
+model = getattr(settings, 'DETECTION_MODEL')
+
 
 class MarkerViewSet(viewsets.ModelViewSet):
     queryset = Marker.objects.all()
     serializer_class = MarkerSerializer
 
     def perform_create(self, serializer):
-        serializer.save(status="U", posted_user=self.request.user)
+        # object detection
+        for image in self.request.FILES.values():
+            image = Image.open(image)
+            results = model(image)
+
+            print(results.pandas().xyxy)
+
+            resList = [[] for _ in range(len(results.pandas().xyxy[0]['name']))]
+            for i in range(len(results.pandas().xyxy[0]['name'])):
+                resList[i].append(results.pandas().xyxy[0]['name'][i])
+                resList[i].append(results.pandas().xyxy[0]['confidence'][i])
+            for item in resList:
+                if item[1] >= 0.60:
+                    serializer.save(status="U", posted_user=self.request.user)
+                    return Response({"response": True}, status=status.HTTP_200_OK)
+
+        return Response({"response": False}, status=status.HTTP_200_OK)
 
     def perform_destroy(self, request, pk=None):
         marker_id = self.kwargs['pk']
