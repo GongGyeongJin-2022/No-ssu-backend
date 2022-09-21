@@ -9,8 +9,6 @@ import torch
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DETECTION_MODEL = torch.hub.load('ultralytics/yolov5', 'custom', path='best.pt')
-
 # TODO: 배포할 땐 항상 False로 변경
 DEBUG = True
 

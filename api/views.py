@@ -109,7 +109,7 @@ class MarkerWaitingViewSet(viewsets.ViewSet):
             clear.save()
 
         elif clear_status == 'reject':
-            clear.marker.status = "U"
+            clear.marker.status = "W"
             clear.status = "D"
             clear.save()
 
