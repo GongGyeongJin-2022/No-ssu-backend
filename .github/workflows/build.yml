@@ -2,7 +2,7 @@ name: Nossu Backend CD
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "main" ]
 
 jobs:
   build:
