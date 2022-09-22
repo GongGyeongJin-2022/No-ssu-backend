@@ -44,7 +44,7 @@ class MarkerViewSet(viewsets.ModelViewSet):
                 resList[i].append(results.pandas().xyxy[0]['name'][i])
                 resList[i].append(results.pandas().xyxy[0]['confidence'][i])
             for item in resList:
-                if item[1] >= 0.60:
+                if item[1] >= 0.50:
                     serializer.save(status="U", posted_user=self.request.user)
                     headers = self.get_success_headers(serializer.data)
                     return Response({"response": True}, status=status.HTTP_200_OK, headers=headers)
@@ -121,7 +121,7 @@ class ClearViewSet(viewsets.ModelViewSet):
                 resList[i].append(results.pandas().xyxy[0]['name'][i])
                 resList[i].append(results.pandas().xyxy[0]['confidence'][i])
             for item in resList:
-                if item[1] >= 0.60:  # 하나라도 신뢰도가 0.6 이상이 나오는 경우 쓰레기 처리 인정 x
+                if item[1] >= 0.50:  # 하나라도 신뢰도가 0.5 이상이 나오는 경우 쓰레기 처리 인정 x
                     return Response({"response": False}, status=status.HTTP_200_OK)
 
         serializer.save(cleanup_user=self.request.user, marker_id=self.request.data['marker'])
