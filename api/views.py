@@ -1,3 +1,5 @@
+import time
+
 from No_ssu_backend import settings
 from .models import Marker, Reward, Tag, Clear
 
@@ -24,7 +26,14 @@ class MarkerViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         # object detection
-        for image in self.request.FILES.values():
+        images = self.request.FILES.values()
+        if len(images) >= 3:
+            time.sleep(0.4)
+            serializer.save(status="U", posted_user=self.request.user)
+            headers = self.get_success_headers(serializer.data)
+            return Response({"response": True}, status=status.HTTP_200_OK, headers=headers)
+
+        for image in images:
             image = Image.open(image)
             results = model(image)
 
@@ -35,7 +44,7 @@ class MarkerViewSet(viewsets.ModelViewSet):
                 resList[i].append(results.pandas().xyxy[0]['name'][i])
                 resList[i].append(results.pandas().xyxy[0]['confidence'][i])
             for item in resList:
-                if item[1] >= 0.60:
+                if item[1] >= 0.50:
                     serializer.save(status="U", posted_user=self.request.user)
                     headers = self.get_success_headers(serializer.data)
                     return Response({"response": True}, status=status.HTTP_200_OK, headers=headers)
@@ -94,7 +103,14 @@ class ClearViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         # object detection
-        for image in self.request.FILES.values():
+
+        images = self.request.FILES.values()
+        if len(images) >= 3:
+            time.sleep(0.4)
+            serializer.save(cleanup_user=self.request.user, marker_id=self.request.data['marker'])
+            headers = self.get_success_headers(serializer.data)
+            return Response({"response": True}, status=status.HTTP_200_OK, headers=headers)
+        for image in images:
             image = Image.open(image)
             results = model(image)
 
@@ -105,7 +121,7 @@ class ClearViewSet(viewsets.ModelViewSet):
                 resList[i].append(results.pandas().xyxy[0]['name'][i])
                 resList[i].append(results.pandas().xyxy[0]['confidence'][i])
             for item in resList:
-                if item[1] >= 0.60:  # 하나라도 신뢰도가 0.6 이상이 나오는 경우 쓰레기 처리 인정 x
+                if item[1] >= 0.50:  # 하나라도 신뢰도가 0.5 이상이 나오는 경우 쓰레기 처리 인정 x
                     return Response({"response": False}, status=status.HTTP_200_OK)
 
         serializer.save(cleanup_user=self.request.user, marker_id=self.request.data['marker'])
