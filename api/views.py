@@ -27,7 +27,7 @@ class MarkerViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         # object detection
         images = self.request.FILES.values()
-        if len(images) >= 3:
+        if len(list(images)) >= 3:
             time.sleep(0.4)
             serializer.save(status="U", posted_user=self.request.user)
             headers = self.get_success_headers(serializer.data)
@@ -105,7 +105,7 @@ class ClearViewSet(viewsets.ModelViewSet):
         # object detection
 
         images = self.request.FILES.values()
-        if len(images) >= 3:
+        if len(list(images)) >= 3:
             time.sleep(0.4)
             serializer.save(cleanup_user=self.request.user, marker_id=self.request.data['marker'])
             headers = self.get_success_headers(serializer.data)
@@ -132,7 +132,7 @@ class ClearViewSet(viewsets.ModelViewSet):
 class ChargePointAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         user = request.user
-        user.point += 1000
+        user.point += 1
         user.save()
         return Response(status=status.HTTP_200_OK)
 
